@@ -9,9 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".CartActivity"></activity>
         <activity
             android:name=".ConversionActivity"
-            android:theme="@android:style/Theme.Material.Light.Dialog.NoActionBar.MinWidth"></activity>
+            android:theme="@android:style/Theme.Material.Light.Dialog.NoActionBar.MinWidth" />
         <activity android:name=".AddNewActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".CartActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/cartToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
@@ -17,70 +17,71 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="191dp"
-        android:layout_height="46dp"
+        android:layout_width="192dp"
+        android:layout_height="56dp"
         android:layout_marginBottom="1dp"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
 
+    <View
+        android:id="@+id/cartLineView"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/cartToolbar"
+        tools:layout_editor_absoluteX="27dp" />
+
     <TextView
-        android:id="@+id/main_emptyListText"
+        android:id="@+id/cart_emptyListText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/product_sans_bold"
-        android:text="No items in list"
-        app:layout_constraintBottom_toBottomOf="@+id/main_listView"
-        app:layout_constraintEnd_toEndOf="@+id/main_listView"
-        app:layout_constraintStart_toStartOf="@+id/main_listView"
-        app:layout_constraintTop_toTopOf="@+id/main_listView" />
+        android:text="No items in cart"
+        app:layout_constraintBottom_toBottomOf="@+id/cart_listView"
+        app:layout_constraintEnd_toEndOf="@+id/cart_listView"
+        app:layout_constraintStart_toStartOf="@+id/cart_listView"
+        app:layout_constraintTop_toBottomOf="@+id/cartLineView" />
 
     <ListView
-        android:id="@+id/main_listView"
-        android:layout_width="355dp"
-        android:layout_height="579dp"
+        android:id="@+id/cart_listView"
+        android:layout_width="358dp"
+        android:layout_height="423dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.476"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view">
+        app:layout_constraintTop_toBottomOf="@+id/cartLineView">
 
     </ListView>
 
-    <TextView
-        android:id="@+id/main_amountInCart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/product_sans_bold"
-        android:text="Items in Cart:"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/main_clearCart"
-        app:layout_constraintTop_toBottomOf="@+id/main_listView" />
-
     <Button
-        android:id="@+id/main_clearCart"
+        android:id="@+id/cart_clear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/product_sans_bold"
         android:onClick="clearCart"
         android:text="Clear Cart"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/main_amountInCart"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_listView" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/cart_finalCost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/product_sans_bold"
+        android:text="Final Cost: N/A"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/cart_clear"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cart_listView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

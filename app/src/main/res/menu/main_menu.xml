@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/menu_addNew"
         android:icon="@drawable/ic_library_add_white_24dp"
         android:title="Add New" />
+    <item
+        android:id="@+id/menu_cart"
+        android:icon="@drawable/ic_shopping_cart_black_24dp"
+        android:title="Cart"
+        app:showAsAction="always" />
 </menu>

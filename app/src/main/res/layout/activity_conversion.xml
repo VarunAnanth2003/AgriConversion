@@ -72,7 +72,23 @@
         android:onClick="back"
         android:text="Back"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/conv_saveButton"
+        app:layout_constraintHorizontal_bias="0.243"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/conv_final" />
+        app:layout_constraintTop_toBottomOf="@+id/conv_final"
+        app:layout_constraintVertical_bias="0.503" />
+
+    <Button
+        android:id="@+id/conv_saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
+        android:onClick="save"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/conv_backbutton"
+        app:layout_constraintTop_toBottomOf="@+id/conv_final"
+        app:layout_constraintVertical_bias="0.503" />
 </androidx.constraintlayout.widget.ConstraintLayout>

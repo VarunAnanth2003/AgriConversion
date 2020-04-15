@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,10 +23,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     ListView itemListView;
     JSONArray allItems = new JSONArray();
+    JSONArray cartItems = new JSONArray();
+    ArrayList<Double> cartAmounts = new ArrayList<>();
+    ArrayList<Double> cartCosts = new ArrayList<>();
+    ArrayList<Integer> cartIndexes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         imm.toggleSoftInputFromWindow(myToolbar.getWindowToken(), 0, 0);
         setupItems();
         refreshInfo();
+        refreshCart();
         checkForData();
         final SharedPreferences stored_data = getSharedPreferences("USER_PREFERENCES", MODE_PRIVATE);
         itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -127,6 +135,45 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshCart();
+    }
+
+    private void refreshCart() {
+        final SharedPreferences stored_data = getSharedPreferences("CART", MODE_PRIVATE);
+        int cycleNum = stored_data.getInt("maxCartIndex", -1);
+        cartItems = new JSONArray();
+        cartAmounts = new ArrayList<>();
+        cartCosts = new ArrayList<>();
+        cartIndexes = new ArrayList<>();
+        try {
+            for (int i = 0; i <= cycleNum; i++) {
+                if (!stored_data.getString(String.valueOf(i), "").equals("")) {
+                    String[] tokens = stored_data.getString(String.valueOf(i), "").split("!!!");
+                    cartItems.put(new JSONObject(tokens[0]));
+                    cartAmounts.add(Double.parseDouble(tokens[1]));
+                    cartCosts.add(Double.parseDouble(tokens[2]));
+                    cartIndexes.add(Integer.parseInt(tokens[3]));
+                }
+            }
+        } catch (JSONException je) {
+            je.printStackTrace();
+            Log.d("ERRORS", "Failed to refreshInfo");
+        }
+        TextView itemCount = findViewById(R.id.main_amountInCart);
+        itemCount.setText(Html.fromHtml("<b>Items in Cart: <b>" + cartAmounts.size()));
+    }
+
+    public void clearCart(View view) {
+        final SharedPreferences stored_data = getSharedPreferences("CART", MODE_PRIVATE);
+        SharedPreferences.Editor stored_data_editor = stored_data.edit();
+        stored_data_editor.clear();
+        stored_data_editor.apply();
+        refreshCart();
+    }
+
     private void checkForData() {
         final TextView noDataText = findViewById(R.id.main_emptyListText);
         if (itemListView.getAdapter().getCount() > 0) {
@@ -150,6 +197,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
                 return true;
+            case R.id.menu_cart:
+                Intent j = new Intent(this, CartActivity.class);
+                startActivity(j);
+                finish();
             default:
                 return true;
         }
