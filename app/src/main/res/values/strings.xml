@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">AgriPrice</string>
+    <string-array name="type_array">
+        <item></item>
+        <item>Per kg</item>
+        <item>Per item</item>
+        <item>Per dozen</item>
+    </string-array>
+</resources>
