@@ -255,6 +255,7 @@ public class MainActivity extends AppCompatActivity {
         d = new ArrayList<>();
     }
 
+    //Get file here
     private void connection() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -264,37 +265,39 @@ public class MainActivity extends AppCompatActivity {
             textRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Log.d("EEE", "Download Success");
-                    try {
-                        XSSFSheet infoSheet = new XSSFWorkbook(new FileInputStream(localFile)).getSheetAt(0);
-                        Iterator<Row> rowIterator = infoSheet.iterator();
-                        while (rowIterator.hasNext()) {
-                            Row row = rowIterator.next();
-                            if (row.getRowNum() != 0) {
-                                try {
-                                    a.add(row.getCell(0).toString().trim());
-                                    b.add((int) Double.parseDouble(row.getCell(1).toString().trim()));
-                                    c.add(Double.parseDouble(row.getCell(2).toString().trim()));
-                                    d.add(row.getRowNum() - 1);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    Log.d("ERRORS", "Failed to read excel sheet");
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        Log.d("ERRORS", "Connection failed");
-                    }
-
+                    saveData(localFile);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-                    Log.d("EEE", "Download Failure");
+                    Log.d("ERRORS", "Download Failure");
                 }
             });
         } catch (IOException ioe) {
             Log.d("ERRORS", "Failed to download file");
+        }
+    }
+
+    private void saveData(File localFile) {
+        try {
+            XSSFSheet infoSheet = new XSSFWorkbook(new FileInputStream(localFile)).getSheetAt(0);
+            Iterator<Row> rowIterator = infoSheet.iterator();
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                if (row.getRowNum() != 0) {
+                    try {
+                        a.add(row.getCell(0).toString().trim());
+                        b.add((int) Double.parseDouble(row.getCell(1).toString().trim()));
+                        c.add(Double.parseDouble(row.getCell(2).toString().trim()));
+                        d.add(row.getRowNum() - 1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.d("ERRORS", "Failed to read excel sheet");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.d("ERRORS", "saveData failed");
         }
     }
 }
