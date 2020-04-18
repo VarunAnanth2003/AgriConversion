@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "613035028398",
+    "firebase_url": "https://agriprice-7e118.firebaseio.com",
+    "project_id": "agriprice-7e118",
+    "storage_bucket": "agriprice-7e118.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613035028398:android:07d58cfc710916759ee23f",
+        "android_client_info": {
+          "package_name": "com.FLNS.agriconversion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "613035028398-nmefqb1cuut9312jihp4l7de4blid9o4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZkj08CyeFQZfub08htzKqbxR6OaYw9LQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "613035028398-nmefqb1cuut9312jihp4l7de4blid9o4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -48,22 +48,24 @@ public class ItemListAdapter extends BaseAdapter {
                     inflate(R.layout.listview_item, viewGroup, false);
         }
         TextView name = view.findViewById(R.id.listview_name);
+        TextView info = view.findViewById(R.id.listview_info);
         try {
             JSONObject currentItem = (JSONObject) allItems.get(i);
             name.setText(currentItem.getString("name"));
-            name.setText(name.getText().toString() + " [₹" + currentItem.getDouble("costPerUnit"));
+            name.setText(name.getText().toString());
+            info.setText(" [₹" + currentItem.getDouble("costPerUnit"));
             switch (currentItem.getInt("weightType")) {
                 case 0:
-                    name.setText(name.getText().toString() + " per kg]");
+                    info.setText(info.getText().toString() + " per kg]");
                     break;
                 case 1:
-                    name.setText(name.getText().toString() + " per item]");
+                    info.setText(info.getText().toString() + " per item]");
                     break;
                 case 2:
-                    name.setText(name.getText().toString() + " per dozen]");
+                    info.setText(info.getText().toString() + " per dozen]");
                     break;
                 default:
-                    name.setText(name.getText().toString() + " per error]");
+                    info.setText(info.getText().toString() + " per error]");
                     break;
             }
         } catch (JSONException je) {

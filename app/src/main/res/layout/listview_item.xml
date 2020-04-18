@@ -14,10 +14,17 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/product_sans_bold"
             android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            android:paddingBottom="4dp"
             android:text="ITEM_NAME_OVERFLOW_MAX"
             android:textColor="#000000"
             android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/listview_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/product_sans_regular"
+            android:text="ITEM_INFO" />
 
     </LinearLayout>
 

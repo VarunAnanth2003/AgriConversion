@@ -7,6 +7,11 @@
         android:icon="@drawable/ic_library_add_white_24dp"
         android:title="Add New" />
     <item
+        android:id="@+id/menu_refresh"
+        android:icon="@drawable/ic_refresh_black_24dp"
+        android:title="Refresh"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/menu_cart"
         android:icon="@drawable/ic_shopping_cart_black_24dp"
         android:title="Cart"

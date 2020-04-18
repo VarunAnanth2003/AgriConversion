@@ -58,21 +58,7 @@ public class CartListAdapter extends BaseAdapter {
         try {
             JSONObject currentItem = (JSONObject) cartItems.get(i);
             name.setText(currentItem.getString("name"));
-            name.setText(name.getText().toString() + " [₹" + currentItem.getDouble("costPerUnit"));
-            switch (currentItem.getInt("weightType")) {
-                case 0:
-                    name.setText(name.getText().toString() + " per kg]");
-                    break;
-                case 1:
-                    name.setText(name.getText().toString() + " per item]");
-                    break;
-                case 2:
-                    name.setText(name.getText().toString() + " per dozen]");
-                    break;
-                default:
-                    name.setText(name.getText().toString() + " per error]");
-                    break;
-            }
+            name.setText(name.getText().toString());
         } catch (JSONException je) {
             je.printStackTrace();
             Log.d("ERRORS", "Could not extract currentItem");

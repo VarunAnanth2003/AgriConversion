@@ -15,15 +15,29 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Double> cartAmounts = new ArrayList<>();
     ArrayList<Double> cartCosts = new ArrayList<>();
     ArrayList<Integer> cartIndexes = new ArrayList<>();
+
+    ArrayList<String> a = new ArrayList<>();
+    ArrayList<Integer> b = new ArrayList<>();
+    ArrayList<Double> c = new ArrayList<>();
+    ArrayList<Integer> d = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
     }
 
     private void refreshInfo() {
@@ -119,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
         int cycleNum = stored_data.getInt("maxIndex", -1);
         allItems = new JSONArray();
+        itemListView = findViewById(R.id.main_listView);
         try {
             for (int i = 0; i <= cycleNum; i++) {
                 if (!stored_data.getString(String.valueOf(i), "").equals("")) {
@@ -126,9 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             ItemListAdapter itemListAdapter = new ItemListAdapter(this, allItems);
-            itemListView = findViewById(R.id.main_listView);
             itemListView.setAdapter(itemListAdapter);
-
         } catch (JSONException je) {
             je.printStackTrace();
             Log.d("ERRORS", "Failed to refreshInfo");
@@ -201,6 +220,13 @@ public class MainActivity extends AppCompatActivity {
                 Intent j = new Intent(this, CartActivity.class);
                 startActivity(j);
                 finish();
+                return true;
+            case R.id.menu_refresh:
+                setupItems();
+                refreshInfo();
+                refreshCart();
+                checkForData();
+                return true;
             default:
                 return true;
         }
@@ -209,41 +235,66 @@ public class MainActivity extends AppCompatActivity {
     private void setupItems() {
         final SharedPreferences stored_data = getSharedPreferences("USER_PREFERENCES", MODE_PRIVATE);
         SharedPreferences.Editor e = stored_data.edit();
-        String[] tempArr = {
-                "{\"name\":\"Onion\",\"weightType\":0,\"costPerUnit\":30,\"index\":0}",
-                "{\"name\":\"Potato\",\"weightType\":0,\"costPerUnit\":35,\"index\":1}",
-                "{\"name\":\"Ridge Gourd (Beerakaya)\",\"weightType\":0,\"costPerUnit\":35,\"index\":2}",
-                "{\"name\":\"Bitter Gourd (Kakarakaya)\",\"weightType\":0,\"costPerUnit\":30,\"index\":3}",
-                "{\"name\":\"Okra\",\"weightType\":0,\"costPerUnit\":30,\"index\":4}",
-                "{\"name\":\"Carrot\",\"weightType\":0,\"costPerUnit\":30,\"index\":5}",
-                "{\"name\":\"Capsicum\",\"weightType\":0,\"costPerUnit\":30,\"index\":6}",
-                "{\"name\":\"Beans (Local/French)\",\"weightType\":0,\"costPerUnit\":40,\"index\":7}",
-                "{\"name\":\"Chikkudi (Broad Beans)\",\"weightType\":0,\"costPerUnit\":35,\"index\":8}",
-                "{\"name\":\"Brinjal\",\"weightType\":0,\"costPerUnit\":25,\"index\":9}",
-                "{\"name\":\"Cucumber (Kheera)\",\"weightType\":0,\"costPerUnit\":20,\"index\":10}",
-                "{\"name\":\"Cucumber (English)\",\"weightType\":0,\"costPerUnit\":25,\"index\":11}",
-                "{\"name\":\"Cauliflower\",\"weightType\":0,\"costPerUnit\":20,\"index\":12}",
-                "{\"name\":\"Chili\",\"weightType\":0,\"costPerUnit\":20,\"index\":13}",
-                "{\"name\":\"Tindora (Dondakaya)\",\"weightType\":0,\"costPerUnit\":25,\"index\":14}",
-                "{\"name\":\"Bottle Gourd\",\"weightType\":1,\"costPerUnit\":20,\"index\":15}",
-                "{\"name\":\"Drumstick\",\"weightType\":1,\"costPerUnit\":2.5,\"index\":16}",
-                "{\"name\":\"Beetroot\",\"weightType\":0,\"costPerUnit\":20,\"index\":17}",
-                "{\"name\":\"Cabbage\",\"weightType\":0,\"costPerUnit\":15,\"index\":18}",
-                "{\"name\":\"Tomato\",\"weightType\":0,\"costPerUnit\":10,\"index\":19}",
-                "{\"name\":\"Dosakaya\",\"weightType\":0,\"costPerUnit\":20,\"index\":20}",
-                "{\"name\":\"Coriander Leaf\",\"weightType\":0,\"costPerUnit\":50,\"index\":21}",
-                "{\"name\":\"Curry Leaf\",\"weightType\":0,\"costPerUnit\":50,\"index\":22}",
-                "{\"name\":\"Mint Leaf\",\"weightType\":0,\"costPerUnit\":50,\"index\":23}",
-                "{\"name\":\"Watermelon Kiran\",\"weightType\":1,\"costPerUnit\":50,\"index\":24}",
-                "{\"name\":\"Papaya\",\"weightType\":1,\"costPerUnit\":50,\"index\":25}",
-                "{\"name\":\"Musk Melon\",\"weightType\":1,\"costPerUnit\":50,\"index\":26}",
-                "{\"name\":\"Banana Robusta\",\"weightType\":2,\"costPerUnit\":40,\"index\":27}",
-                "{\"name\":\"Orange Nagpur\",\"weightType\":0,\"costPerUnit\":70,\"index\":28}"
-        };
-        for (int i = 0; i < tempArr.length; i++) {
-            e.putString(String.valueOf(i), tempArr[i]);
+        connection();
+        JSONArray tempArr = DataHandler.packageData(a, b, c, d);
+        for (int i = 0; i < tempArr.length(); i++) {
+            try {
+                e.putString(String.valueOf(i), tempArr.get(i).toString());
+            } catch (JSONException je) {
+                je.printStackTrace();
+                Log.d("ERRORS", "Could not setupitems");
+            }
         }
-        e.putInt("maxIndex", tempArr.length - 1);
+        if (stored_data.getInt("maxIndex", 0) < tempArr.length() - 1) {
+            e.putInt("maxIndex", tempArr.length() - 1);
+        }
         e.apply();
+        a = new ArrayList<>();
+        b = new ArrayList<>();
+        c = new ArrayList<>();
+        d = new ArrayList<>();
+    }
+
+    private void connection() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference textRef = storageRef.child("AgriPriceInformation.xlsx");
+        try {
+            final File localFile = File.createTempFile("info", "xlsx");
+            textRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Log.d("EEE", "Download Success");
+                    try {
+                        XSSFSheet infoSheet = new XSSFWorkbook(new FileInputStream(localFile)).getSheetAt(0);
+                        Iterator<Row> rowIterator = infoSheet.iterator();
+                        while (rowIterator.hasNext()) {
+                            Row row = rowIterator.next();
+                            if (row.getRowNum() != 0) {
+                                try {
+                                    a.add(row.getCell(0).toString().trim());
+                                    b.add((int) Double.parseDouble(row.getCell(1).toString().trim()));
+                                    c.add(Double.parseDouble(row.getCell(2).toString().trim()));
+                                    d.add(row.getRowNum() - 1);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Log.d("ERRORS", "Failed to read excel sheet");
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.d("ERRORS", "Connection failed");
+                    }
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.d("EEE", "Download Failure");
+                }
+            });
+        } catch (IOException ioe) {
+            Log.d("ERRORS", "Failed to download file");
+        }
     }
 }
